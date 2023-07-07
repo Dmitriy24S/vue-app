@@ -1,7 +1,11 @@
 <template>
   <div class="container">
-    <h3>Post List</h3>
-    <PostItem v-for="post in posts" :key="post.id" :post="post" @remove="$emit('remove', post)" />
+    <!-- v-show -->
+    <div v-if="posts.length > 0">
+      <h3>Post List</h3>
+      <PostItem v-for="post in posts" :key="post.id" :post="post" @remove="$emit('remove', post)" />
+    </div>
+    <h3 v-else-if="posts.length === 0">No Posts</h3>
   </div>
 </template>
 
@@ -27,9 +31,5 @@ h3 {
   font-size: 1.8rem;
   color: teal;
   font-weight: 600;
-}
-
-.container {
-  width: 100%;
 }
 </style>

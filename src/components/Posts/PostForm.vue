@@ -3,7 +3,7 @@
     <h4>Create Post</h4>
     <MyInput v-model="post.title" type="text" name="title" id="title" placeholder="Post's title" />
     <MyInput v-model="post.body" type="text" name="body" id="body" placeholder="Post's body" />
-    <MyButton type="submit">Add Post</MyButton>
+    <MyButton type="submit" class="create-post-btn">Add Post</MyButton>
   </form>
 </template>
 
@@ -42,5 +42,9 @@ form h4 {
   font-size: 1.7rem;
   font-weight: 600;
   color: teal;
+  margin-bottom: 1.25rem;
+}
+.create-post-btn {
+  margin-top: 1.25rem;
 }
 </style>

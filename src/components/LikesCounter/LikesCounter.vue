@@ -40,7 +40,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  min-width: 30rem;
   justify-content: center;
 }
 .likes div {
