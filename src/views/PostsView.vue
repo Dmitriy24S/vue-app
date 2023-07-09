@@ -12,7 +12,7 @@
         <PostForm @create="createPost" />
       </MyDialog>
     </div>
-    <PostList :posts="sortedPosts" @remove="removePost" v-if="isLoading === false" />
+    <PostList v-if="isLoading === false" :posts="sortedPosts" @remove="removePost" />
     <p v-else-if="isLoading === true" class="loading-msg">Loading posts...</p>
   </div>
 </template>
