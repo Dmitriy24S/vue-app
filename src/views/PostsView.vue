@@ -6,12 +6,13 @@
       <div class="post-buttons">
         <MyButton @click="fetchPosts">Get Posts</MyButton>
         <MyButton @click="showDialog">Create Post</MyButton>
+        <MySelect v-model="selectedSort" :options="options" />
       </div>
       <MyDialog v-model:show="dialogVisible">
         <PostForm @create="createPost" />
       </MyDialog>
     </div>
-    <PostList :posts="posts" @remove="removePost" v-if="isLoading === false" />
+    <PostList :posts="sortedPosts" @remove="removePost" v-if="isLoading === false" />
     <p v-else-if="isLoading === true" class="loading-msg">Loading posts...</p>
   </div>
 </template>
@@ -49,13 +50,17 @@ export default {
         }
       ],
       dialogVisible: false,
-      isLoading: false
+      isLoading: false,
+      options: [
+        { name: 'By Title', value: 'title' },
+        { name: 'By Description', value: 'body' }
+      ],
+      selectedSort: ''
     }
   },
   methods: {
     createPost(newPost: any) {
-      // console.log('newPost', newPost) // Proxy(Object) {title: '123', body: '123', id: 880}
-      this.posts.push(newPost)
+      this.posts.push(newPost) // Proxy(Object) {title: '123', body: '123', id: 880}
       this.dialogVisible = false
     },
     removePost(post: any) {
@@ -67,8 +72,7 @@ export default {
     async fetchPosts() {
       try {
         this.isLoading = true
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
-        console.log('response', response) // {data: Array(10), status: 200, statusText: '', ... }
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10') // {data: Array(10), status: 200, statusText: '', ... }
         if (response.status === 200) {
           // this.posts.push(...response.data)
           this.posts = response.data
@@ -85,7 +89,27 @@ export default {
   },
   mounted() {
     this.fetchPosts()
+  },
+  computed: {
+    sortedPosts() {
+      if (this.selectedSort === 'title' || this.selectedSort === 'body') {
+        return [...this.posts].sort((post1, post2) => {
+          return post1[this.selectedSort as 'title' | 'body'].localeCompare(
+            post2[this.selectedSort as 'title' | 'body']
+          )
+        })
+      } else {
+        return this.posts
+      }
+    }
   }
+  // watch: {
+  //   selectedSort(newValue: 'title' | 'body') {
+  //     this.posts.sort((post1, post2) => {
+  //       return post1[newValue].localeCompare(post2[newValue])
+  //     })
+  //   }
+  // }
 }
 </script>
 
