@@ -3,6 +3,7 @@
     <LikesCounter />
     <div class="posts-container">
       <h2>Posts</h2>
+      <MyInput v-model="searchQuery" placeholder="Search post title" />
       <div class="post-buttons">
         <MyButton @click="fetchPosts">Get Posts</MyButton>
         <MyButton @click="showDialog">Create Post</MyButton>
@@ -12,7 +13,7 @@
         <PostForm @create="createPost" />
       </MyDialog>
     </div>
-    <PostList v-if="isLoading === false" :posts="sortedPosts" @remove="removePost" />
+    <PostList v-if="isLoading === false" :posts="sortedAndSearchedPosts" @remove="removePost" />
     <p v-else-if="isLoading === true" class="loading-msg">Loading posts...</p>
   </div>
 </template>
@@ -55,7 +56,8 @@ export default {
         { name: 'By Title', value: 'title' },
         { name: 'By Description', value: 'body' }
       ],
-      selectedSort: ''
+      selectedSort: '',
+      searchQuery: ''
     }
   },
   methods: {
@@ -101,6 +103,11 @@ export default {
       } else {
         return this.posts
       }
+    },
+    sortedAndSearchedPosts() {
+      return this.sortedPosts.filter((post) =>
+        post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
     }
   }
   // watch: {
