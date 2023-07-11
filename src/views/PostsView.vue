@@ -15,6 +15,20 @@
     </div>
     <PostList v-if="isLoading === false" :posts="sortedAndSearchedPosts" @remove="removePost" />
     <p v-else-if="isLoading === true" class="loading-msg">Loading posts...</p>
+    <!-- Pagination -->
+    <div v-if="isLoading === false" class="pagination">
+      <button
+        v-for="pageNumber in totalPages"
+        :key="pageNumber"
+        class="pagination__page"
+        :class="{
+          'current-page': pageNumber === page
+        }"
+        @click="changePage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -57,7 +71,10 @@ export default {
         { name: 'By Description', value: 'body' }
       ],
       selectedSort: '',
-      searchQuery: ''
+      searchQuery: '',
+      page: 1,
+      postsAmountLimit: 10,
+      totalPages: 0
     }
   },
   methods: {
@@ -71,13 +88,26 @@ export default {
     showDialog() {
       this.dialogVisible = true
     },
+    changePage(pageNumber: number) {
+      this.page = pageNumber
+      this.fetchPosts()
+      window.scrollTo(0, 0)
+    },
     async fetchPosts() {
       try {
         this.isLoading = true
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10') // {data: Array(10), status: 200, statusText: '', ... }
+        // const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10') // {data: Array(10), status: 200, statusText: '', ... }
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?', {
+          params: {
+            _page: this.page,
+            _limit: this.postsAmountLimit
+          }
+        })
         if (response.status === 200) {
           // this.posts.push(...response.data)
           this.posts = response.data
+          // pagination:
+          this.totalPages = Math.ceil(response.headers['x-total-count'] / this.postsAmountLimit) // 101 posts / 10 per page = 11 page
         } else {
           console.log('response', response)
           throw new Error(response.statusText)
@@ -153,5 +183,30 @@ h2 {
   margin-top: 2rem;
   text-align: center;
   color: teal;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+}
+.pagination__page {
+  /* display: flex; */
+  padding: 0.4rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+}
+.pagination__page:hover {
+  background: teal;
+  color: white;
+}
+.pagination__page.current-page {
+  background: teal;
+  color: white;
 }
 </style>
