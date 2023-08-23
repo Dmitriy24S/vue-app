@@ -16,7 +16,7 @@
     <PostList v-if="isLoading === false" :posts="sortedAndSearchedPosts" @remove="removePost" />
     <p v-else-if="isLoading === true" class="loading-msg">Loading posts...</p>
     <!-- Pagination -->
-    <div v-if="isLoading === false" class="pagination">
+    <!-- <div v-if="isLoading === false" class="pagination">
       <button
         v-for="pageNumber in totalPages"
         :key="pageNumber"
@@ -28,7 +28,9 @@
       >
         {{ pageNumber }}
       </button>
-    </div>
+    </div> -->
+    <!-- Infinite loading -->
+    <div ref="observer" class="observer"></div>
   </div>
 </template>
 
@@ -88,21 +90,23 @@ export default {
     showDialog() {
       this.dialogVisible = true
     },
-    changePage(pageNumber: number) {
-      this.page = pageNumber
-      this.fetchPosts()
-      window.scrollTo(0, 0)
-    },
+    // changePage(pageNumber: number) {
+    // this.page = pageNumber
+    // fetch v1:
+    // this.fetchPosts()
+    // window.scrollTo(0, 500)
+    // },
     async fetchPosts() {
       try {
         this.isLoading = true
-        // const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10') // {data: Array(10), status: 200, statusText: '', ... }
+        // const response = await axios.get('https://jsonplaceholder.typicode.com/posts?_limit=10')
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts?', {
           params: {
             _page: this.page,
             _limit: this.postsAmountLimit
           }
         })
+        console.log('response', response) // {data: Array(10), status: 200, statusText: '', ... }
         if (response.status === 200) {
           // this.posts.push(...response.data)
           this.posts = response.data
@@ -117,10 +121,50 @@ export default {
       } finally {
         this.isLoading = false
       }
+    },
+    async fetchMorePosts() {
+      try {
+        this.page += 1
+        // this.isLoading = true
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts?', {
+          params: {
+            _page: this.page,
+            _limit: this.postsAmountLimit
+          }
+        })
+        console.log('response', response) // {data: Array(10), status: 200, statusText: '', ... }
+        if (response.status === 200) {
+          this.posts.push(...response.data)
+        } else {
+          console.log('response', response)
+          throw new Error(response.statusText)
+        }
+      } catch (error) {
+        console.log('fetchPosts error:', error)
+      } finally {
+        // this.isLoading = false
+      }
     }
   },
   mounted() {
     this.fetchPosts()
+    const options = {
+      // root: document.querySelector('#scrollArea'),
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+    // const callback: IntersectionObserverCallback = function (
+    const callback: IntersectionObserverCallback = (
+      entries: IntersectionObserverEntry[],
+      observer: IntersectionObserver
+    ) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        console.log('Intersecting observer')
+        this.fetchMorePosts()
+      }
+    }
+    const observer = new IntersectionObserver(callback, options)
+    observer.observe(this.$refs.observer as HTMLDivElement)
   },
   computed: {
     sortedPosts() {
@@ -139,14 +183,19 @@ export default {
         post.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     }
+  },
+  watch: {
+    // sort posts v1:
+    //   selectedSort(newValue: 'title' | 'body') {
+    //     this.posts.sort((post1, post2) => {
+    //       return post1[newValue].localeCompare(post2[newValue])
+    //     })
+    //   }
+    // fetch v2:
+    // page() {
+    // this.fetchPosts()
+    // }
   }
-  // watch: {
-  //   selectedSort(newValue: 'title' | 'body') {
-  //     this.posts.sort((post1, post2) => {
-  //       return post1[newValue].localeCompare(post2[newValue])
-  //     })
-  //   }
-  // }
 }
 </script>
 
@@ -208,5 +257,10 @@ h2 {
 .pagination__page.current-page {
   background: teal;
   color: white;
+}
+
+.observer {
+  height: 30px;
+  background-color: teal;
 }
 </style>
