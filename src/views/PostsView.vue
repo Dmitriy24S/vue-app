@@ -8,6 +8,7 @@
         <MyButton @click="fetchPosts">Get Posts</MyButton>
         <MyButton @click="showDialog">Create Post</MyButton>
         <MySelect v-model="selectedSort" :options="options" />
+        <MyButton @click="togglePagination">Toggle Pagination</MyButton>
       </div>
       <MyDialog v-model:show="dialogVisible">
         <PostForm @create="createPost" />
@@ -16,7 +17,7 @@
     <PostList v-if="isLoading === false" :posts="sortedAndSearchedPosts" @remove="removePost" />
     <p v-else-if="isLoading === true" class="loading-msg">Loading posts...</p>
     <!-- Pagination -->
-    <!-- <div v-if="isLoading === false" class="pagination">
+    <div v-if="isLoading === false && usePagination" class="pagination">
       <button
         v-for="pageNumber in totalPages"
         :key="pageNumber"
@@ -28,9 +29,13 @@
       >
         {{ pageNumber }}
       </button>
-    </div> -->
-    <!-- Infinite loading -->
-    <div ref="observer" class="observer"></div>
+    </div>
+    <!-- Infinite scrolling -->
+    <div
+      ref="observer"
+      class="observer"
+      :style="{ display: usePagination ? 'none' : 'block' }"
+    ></div>
   </div>
 </template>
 
@@ -76,7 +81,8 @@ export default {
       searchQuery: '',
       page: 1,
       postsAmountLimit: 10,
-      totalPages: 0
+      totalPages: 0,
+      usePagination: false
     }
   },
   methods: {
@@ -90,12 +96,17 @@ export default {
     showDialog() {
       this.dialogVisible = true
     },
-    // changePage(pageNumber: number) {
-    // this.page = pageNumber
-    // fetch v1:
-    // this.fetchPosts()
-    // window.scrollTo(0, 500)
-    // },
+    changePage(pageNumber: number) {
+      this.page = pageNumber
+      // fetch v1:
+      this.fetchPosts()
+      window.scrollTo(0, 500)
+    },
+    togglePagination() {
+      this.usePagination = !this.usePagination
+      this.page = 1
+      this.fetchPosts()
+    },
     async fetchPosts() {
       try {
         this.isLoading = true
@@ -262,5 +273,6 @@ h2 {
 .observer {
   height: 30px;
   background-color: teal;
+  margin-top: 4rem;
 }
 </style>
