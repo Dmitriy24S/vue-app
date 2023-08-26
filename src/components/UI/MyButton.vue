@@ -19,6 +19,7 @@ export default {
   background-color: transparent;
   font-weight: 500;
   cursor: pointer;
+  width: 100%;
 }
 .btn:hover {
   background-color: teal;

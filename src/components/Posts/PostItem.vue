@@ -5,6 +5,7 @@
       <div><strong>Description: </strong>{{ post.body }}</div>
     </div>
     <div class="buttons">
+      <MyButton @click="$router.push(`posts/${post.id}`)">View</MyButton>
       <MyButton @click="$emit('remove', post)">Delete</MyButton>
     </div>
   </div>
@@ -16,7 +17,7 @@ export default {
   // components: { MyButton },
   props: {
     post: {
-      type: Object as () => { title: string; body: string },
+      type: Object as () => { title: string; body: string; id: number },
       required: true
     }
   }
