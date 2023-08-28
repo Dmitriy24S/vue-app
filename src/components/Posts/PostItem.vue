@@ -5,8 +5,10 @@
       <div><strong>Description: </strong>{{ post.body }}</div>
     </div>
     <div class="buttons">
-      <MyButton @click="$router.push(`posts/${post.id}`)">View</MyButton>
-      <MyButton @click="$emit('remove', post)">Delete</MyButton>
+      <MyButton @click="$router.push(`posts/${post.id}`)" :style="{ minWidth: '4.7rem' }"
+        >View</MyButton
+      >
+      <MyButton @click="$emit('remove', post)" :style="{ minWidth: '4.7rem' }">Delete</MyButton>
     </div>
   </div>
 </template>
@@ -34,5 +36,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+}
+.buttons {
+  display: grid;
+  place-content: end;
 }
 </style>

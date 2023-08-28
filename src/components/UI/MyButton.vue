@@ -10,7 +10,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 /* button { */
 .btn {
   padding: 1rem;
@@ -20,6 +20,9 @@ export default {
   font-weight: 500;
   cursor: pointer;
   width: 100%;
+  @media (min-width: 600px) {
+    width: auto;
+  }
 }
 .btn:hover {
   background-color: teal;

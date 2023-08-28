@@ -34,12 +34,17 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .select {
   padding: 1rem;
   border: 1px solid teal;
   color: teal;
   cursor: pointer;
+  text-align: center;
+  width: 100%;
+  @media (min-width: 600px) {
+    width: auto;
+  }
 }
 .select:hover {
   background-color: teal;
