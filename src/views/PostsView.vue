@@ -3,7 +3,7 @@
     <LikesCounter />
     <div class="posts-container">
       <h2>Posts</h2>
-      <MyInput v-model="searchQuery" placeholder="Search post title" />
+      <MyInput v-focus v-model="searchQuery" placeholder="Search post title" />
       <div class="post-buttons">
         <MyButton @click="fetchPosts">Get Posts</MyButton>
         <MyButton @click="showDialog">Create Post</MyButton>
@@ -31,8 +31,9 @@
       </button>
     </div>
     <!-- Infinite scrolling -->
+    <!-- without directive: ref="observer" -->
     <div
-      ref="observer"
+      v-intersection="fetchMorePosts"
       class="observer"
       :style="{ display: usePagination ? 'none' : 'block' }"
     ></div>
@@ -159,23 +160,22 @@ export default {
   },
   mounted() {
     this.fetchPosts()
-    const options = {
-      // root: document.querySelector('#scrollArea'),
-      rootMargin: '0px',
-      threshold: 1.0
-    }
-    // const callback: IntersectionObserverCallback = function (
-    const callback: IntersectionObserverCallback = (
-      entries: IntersectionObserverEntry[],
-      observer: IntersectionObserver
-    ) => {
-      if (entries[0].isIntersecting && this.page < this.totalPages) {
-        console.log('Intersecting observer')
-        this.fetchMorePosts()
-      }
-    }
-    const observer = new IntersectionObserver(callback, options)
-    observer.observe(this.$refs.observer as HTMLDivElement)
+    // without directive:
+    // const options = {
+    //   rootMargin: '0px',
+    //   threshold: 1.0
+    // }
+    // const callback: IntersectionObserverCallback = (
+    //   entries: IntersectionObserverEntry[],
+    //   observer: IntersectionObserver
+    // ) => {
+    //   if (entries[0].isIntersecting && this.page < this.totalPages) {
+    //     console.log('Intersecting observer')
+    //     this.fetchMorePosts()
+    //   }
+    // }
+    // const observer = new IntersectionObserver(callback, options)
+    // observer.observe(this.$refs.observer as HTMLDivElement)
   },
   computed: {
     sortedPosts() {
