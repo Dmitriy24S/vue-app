@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <MyButton @click="$router.push(`/posts`)">Back to list</MyButton>
     <h1 class="title">Post - {{ $route.params.id }}</h1>
     <div v-if="loading && !error">

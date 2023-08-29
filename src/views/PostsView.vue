@@ -8,7 +8,9 @@
         <MyButton @click="fetchPosts">Get Posts</MyButton>
         <MyButton @click="showDialog">Create Post</MyButton>
         <MySelect v-model="selectedSort" :options="options" />
-        <MyButton @click="togglePagination">Toggle Pagination</MyButton>
+        <MyButton @click="togglePagination">{{
+          usePagination ? 'Switch to Infinite Scroll' : 'Switch to Pagination'
+        }}</MyButton>
       </div>
       <MyDialog v-model:show="dialogVisible">
         <PostForm @create="createPost" />
@@ -210,7 +212,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 /* @media (min-width: 1024px) { } */
 
 .container {
