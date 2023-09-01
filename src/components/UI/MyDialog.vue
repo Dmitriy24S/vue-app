@@ -9,7 +9,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<!-- <script lang="ts"> -->
+<script>
 import { defineComponent } from 'vue'
 import toggleMixin from '@/mixins/toggleMixin'
 
