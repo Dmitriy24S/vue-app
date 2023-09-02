@@ -8,6 +8,7 @@
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/posts">Posts</RouterLink>
+        <RouterLink to="/posts-vuex">Posts (Vuex)</RouterLink>
       </nav>
     </div>
   </header>
@@ -16,7 +17,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
-// import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <!-- <style lang="scss" scoped> -->

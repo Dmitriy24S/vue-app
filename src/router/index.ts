@@ -18,6 +18,11 @@ const router = createRouter({
       component: () => import('../views/PostsView.vue')
     },
     {
+      path: '/posts-vuex',
+      name: 'posts-vuex',
+      component: () => import('../views/PostsVuexStoreView.vue')
+    },
+    {
       path: '/posts/:id',
       name: 'post',
       component: () => import('../views/PostView.vue')
