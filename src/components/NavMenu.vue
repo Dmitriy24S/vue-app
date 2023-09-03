@@ -9,6 +9,7 @@
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/posts">Posts</RouterLink>
         <RouterLink to="/posts-vuex">Posts (Vuex)</RouterLink>
+        <RouterLink to="/posts-composition">Posts (CompositionApi)</RouterLink>
       </nav>
     </div>
   </header>
@@ -53,6 +54,9 @@ nav a {
 }
 
 nav a:first-of-type {
+  border: 0;
+}
+nav a:last-of-type {
   border: 0;
 }
 

@@ -23,6 +23,11 @@ const router = createRouter({
       component: () => import('../views/PostsVuexStoreView.vue')
     },
     {
+      path: '/posts-composition',
+      name: 'posts-composition',
+      component: () => import('../views/PostsCompositionApiView.vue')
+    },
+    {
       path: '/posts/:id',
       name: 'post',
       component: () => import('../views/PostView.vue')
